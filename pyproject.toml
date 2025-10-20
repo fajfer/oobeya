@@ -1,0 +1,103 @@
+# SPDX-FileCopyrightText: 2025 Damian Fajfer <damian@fajfer.org>
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+[project]
+name = "oobeya"
+version = "0.1.0"
+description = "Python client library for Oobeya API - Software Engineering Intelligence Platform"
+authors = [
+    {name = "Damian Fajfer", email = "damian@fajfer.org"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "EUPL-1.2"}
+keywords = ["oobeya", "api", "client", "dora", "metrics", "engineering"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: European Union Public Licence 1.2 (EUPL 1.2)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "requests>=2.31.0",
+    "python-dateutil>=2.8.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.1",
+    "black>=23.7.0",
+    "flake8>=6.1.0",
+    "mypy>=1.5.0",
+    "types-requests>=2.31.0",
+    "types-python-dateutil>=2.8.19",
+]
+
+[project.urls]
+Homepage = "https://github.com/fajfer/oobeya"
+Documentation = "https://github.com/fajfer/oobeya#readme"
+Repository = "https://github.com/fajfer/oobeya"
+Issues = "https://github.com/fajfer/oobeya/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 120
+target-version = ['py312']
+include = '\.pyi?$'
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--cov=src/oobeya",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]

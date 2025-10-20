@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2025 Damian Fajfer <damian@fajfer.org>
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+version = 1
+SPDX-PackageName = "oobeya"
+SPDX-PackageSupplier = "Person: Damian Fajfer <damian@fajfer.org>"
+SPDX-PackageDownloadLocation = "https://github.com/fajfer/oobeya"
+
+[[annotations]]
+path = ["**/__pycache__/**", ".gitignore"]
+SPDX-FileCopyrightText = "2025 Damian Fajfer <damian@fajfer.org>"
+SPDX-License-Identifier = "EUPL-1.2"
