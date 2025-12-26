@@ -25,14 +25,51 @@ class TestUsersResource:
 
     def test_list_users(self, users_resource):
         """Test listing users."""
-        mock_response = {
-            "version": "v1",
-            "referenceId": "ref123",
-            "payload": {"contents": [], "totalElements": 0},
-        }
+        mock_response = {"contents": [{"id": "user-1", "userName": "user1"}], "totalElements": 1}
         users_resource.client.get.return_value = mock_response
 
         result = users_resource.list(page=0, size=10)
+
+        users_resource.client.get.assert_called_once()
+        assert result is not None
+        assert len(result.contents) == 1
+
+    def test_list_users_none_response(self, users_resource):
+        """Test listing users with None response."""
+        users_resource.client.get.return_value = None
+
+        result = users_resource.list(page=0, size=10)
+
+        assert result is None
+
+    def test_list_users_empty_contents(self, users_resource):
+        """Test listing users with empty contents."""
+        mock_response = {"contents": [], "totalElements": 0}
+        users_resource.client.get.return_value = mock_response
+
+        result = users_resource.list()
+
+        assert result is not None
+        assert result.contents == []
+
+    def test_list_users_with_filters(self, users_resource):
+        """Test listing users with various filters."""
+        mock_response = {"contents": [], "totalElements": 0}
+        users_resource.client.get.return_value = mock_response
+
+        result = users_resource.list(
+            page=0,
+            size=20,
+            sort=["name:ASC"],
+            username="john",
+            email="john@test.com",
+            start_creation_date="2024-01-01",
+            end_creation_date="2024-12-31",
+            start_termination_date="2024-01-01",
+            end_termination_date="2024-12-31",
+            start_hire_date="2024-01-01",
+            end_hire_date="2024-12-31",
+        )
 
         users_resource.client.get.assert_called_once()
         assert result is not None
@@ -47,6 +84,14 @@ class TestUsersResource:
         users_resource.client.get.assert_called_once_with("/apis/v1/users/user123")
         assert result is not None
         assert result.id == "user123"
+
+    def test_get_user_none(self, users_resource):
+        """Test getting a user with None response."""
+        users_resource.client.get.return_value = None
+
+        result = users_resource.get("user123")
+
+        assert result is None
 
     def test_create_user(self, users_resource):
         """Test creating a user."""
@@ -72,6 +117,15 @@ class TestUsersResource:
         assert result is not None
         assert result.id == "user123"
 
+    def test_create_user_none(self, users_resource):
+        """Test creating a user with None response."""
+        user = UserRequestDTO(name="John")
+        users_resource.client.post.return_value = None
+
+        result = users_resource.create(user)
+
+        assert result is None
+
     def test_update_user(self, users_resource):
         """Test updating a user."""
         user = UserRequestDTO(id="user123", name="John", surname="Doe", username="johndoe")
@@ -87,6 +141,15 @@ class TestUsersResource:
         users_resource.client.put.assert_called_once()
         assert result is not None
 
+    def test_update_user_none(self, users_resource):
+        """Test updating a user with None response."""
+        user = UserRequestDTO(id="user123")
+        users_resource.client.put.return_value = None
+
+        result = users_resource.update(user)
+
+        assert result is None
+
     def test_delete_user(self, users_resource):
         """Test deleting a user."""
         mock_response = {"id": "user123", "userName": "johndoe"}
@@ -95,4 +158,12 @@ class TestUsersResource:
         result = users_resource.delete("user123")
 
         users_resource.client.delete.assert_called_once_with("/apis/v1/users/user123")
-        assert result is not None
+        assert result is True
+
+    def test_delete_user_none(self, users_resource):
+        """Test deleting a user with None response."""
+        users_resource.client.delete.return_value = None
+
+        result = users_resource.delete("user123")
+
+        assert result is False

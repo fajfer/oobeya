@@ -4,3 +4,7 @@ coverage.xml
 openapi.json
 dist/
 __pycache__/
+htmlcov/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
